@@ -9,6 +9,8 @@ Serial myPort;  // Create object from Serial class
 Serial newESP32;
 String val;     // Data received from the serial port
 String newval;
+String left = "0";
+int input1;
 
 // hover color
 
@@ -16,13 +18,13 @@ color[] pastel = {#FFFFFF, #ffffb3, #bebada, #fb8072, #80b1d3, #fdb462, #7fc97f}
 
 int hover = pastel[0];
 
-boolean[] selectionState = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true};
+boolean[] selectionState = {false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false};
 
 //------------------------------------------------------------------------------------
 
 void setup() {
   // runs once
-  //print(Serial.list());
+  print(Serial.list());
   String portName = Serial.list()[5]; //change the 0 to a 1 or 2 etc. to match your port
   String maggiePort = Serial.list()[3];
   myPort = new Serial(this, portName, 9600);
@@ -42,37 +44,27 @@ void draw() {
   
   if ( newESP32.available() > 0) 
   {  // If data is available,
-    newval = newESP32.readStringUntil('\n');         // read it and store it in val
+    newval = newESP32.readStringUntil('\n');   
+    print(newval);
+    print(newval.getClass().getName());
+    
+    if (newval.equals(left)) {
+      print("0 is printed, yes");
+    }
+    //print(":");
+    //input1 = int(newval);
+    //print(input1);
+    //print("\n");
+    // read it and store it in val
   } 
   //println(val); //print it out in the console
-  println(newval);
+  //println(newval);
+ 
   
-  joystickMovement();
 
   // The grid ---
   drawGrid();
 
-  //// Headline ---
-  //headline();
-
-  //// set footer text
-  //setFooterText();
-
-  //// Detect a Win
-  //if (! gameIsWin) {
-  //  if (itIsWin('X')) {
-  //    // AI won ...
-  //    gameIsWin=true;
-  //    winnerIs = 'X';
-  //  } else if (itIsWin('O')) {
-  //    // Human won ...
-  //    gameIsWin=true;
-  //    winnerIs = 'O';
-  //  }//else if
-  //}//if
-
-  //// show messages
-  //showMessages();
   //
 }//func
 
@@ -82,11 +74,30 @@ void draw() {
 
 // Tools 1
 
-void joystickMovement() {
-  int[] list = int(split(newval, ','));
-  print(list[0]);
-  print("\n");
-  print(list[1]);
+void joystickMovement(int counter) {
+  int temp;
+  //print(input1);
+  //print(newval);
+ 
+  
+   //left movement
+  if (input1 == 0) {
+    //print("true");
+    if (counter == 0) {
+      temp = 15;
+    } else if (counter == 3 || counter == 7 || counter == 11) {
+      temp = counter + 3;
+    } else if (counter == 15) {
+      temp = 2;
+    } else {
+      temp = counter - 1;
+    } 
+    
+    
+    selectionState[temp] = true;
+    selectionState[counter] = false;
+    
+  } 
 }
 
 void drawGrid() {
@@ -111,6 +122,8 @@ void drawGrid() {
       int centerX = (x + x + 100)/ 2;
       int centerY = (y + y + 100)/ 2;
       square(centerX, centerY, 1);
+      
+      joystickMovement(counter);
       
       if (selectionState[counter]) {
         hover = pastel[2];
