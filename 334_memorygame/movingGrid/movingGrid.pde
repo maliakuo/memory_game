@@ -34,7 +34,7 @@ String[] vals = new String[4]; // for joystick input
 
 
 void setup() {
-  // print(Serial.list());
+   print(Serial.list());
   //  String portName = Serial.list()[5]; //change the 0 to a 1 or 2 etc. to match your port
   String maggiePort = Serial.list()[3];
  // myPort = new Serial(this, portName, 9600);
@@ -162,6 +162,7 @@ void keyPressed() {
 
 void joystick() {
   if(newval == "D"){
+    println("D dir");
     sqY++; 
     if(sqY == 5) {
       sqY = 1;
@@ -220,7 +221,7 @@ void readData(){
       println(vals);    //print(vals);
       i++;
     }
-    println(newval);
+    println("newval is ", newval);
     }
     
 

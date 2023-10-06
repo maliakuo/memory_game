@@ -63,31 +63,41 @@ void loop() {
   }
 
   // print data to Serial Monitor on Arduino IDE
-  //Serial.print(valueX);
-  if(valueX == 0) {
+  // Serial.println("\n");
+  // Serial.println(valueX);
+  // Serial.println(valueY);
+  if(valueX == 0 && (1500 < valueY < 2500)) {
     current = 'L';
     if(current != last) {
       Serial.print("L");
       last = 'L';
     }
   }
-if(valueX == 4095) {
-  current = 'R';
-  if(current != last)
-   Serial.print("R");
-   last = 'R';
+  else if(valueX == 4095 && (1500 < valueY < 2500)) {
+    current = 'R';
+    if(current != last)
+    Serial.print("R");
+    last = 'R';
   }
-if(valueY == 4095) {
-  current = 'D';
-  if(current != last)
-   Serial.print("D");
-   last = 'D';
+  else if(valueY == 4095  && (1500 < valueX < 2500)) {
+    current = 'D';
+    if(current != last)
+    Serial.print("D");
+    last = 'D';
   }
-  if(valueY == 0) {
-  current = 'U';
-  if(current != last)
-   Serial.print("U");
-   last = 'U';
+  else if(valueY == 0 && (1500 < valueX < 2500)) {
+    current = 'U';
+    if(current != last)
+    Serial.print("U");
+    last = 'U';
+  } else {
+    current = 'X';
+    if (current != last) {
+      Serial.print("X");
+      last = 'X';
+    }
+    
+  
   }
   
 
