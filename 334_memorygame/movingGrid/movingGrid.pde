@@ -41,7 +41,6 @@ boolean button = false;
 
 // initializing coordinate array
 ArrayList <Coordinates> coords = new ArrayList<Coordinates>();;
-int track = 0;
 
 void setup() {
   // print(Serial.list());
@@ -79,7 +78,6 @@ void draw() {
        movePlayer(i, j, sqX, sqY);
      }
      
-
      joystick(i, j);
      readButton();
 
@@ -88,6 +86,7 @@ void draw() {
       // For every column and row, a rectangle is drawn at an (x,y) location scaled and sized by videoScale.
       rect(x, y, videoScale, videoScale);
     readData();
+    writeData();
     }
   }
   
@@ -185,35 +184,34 @@ void readButton() {
     
 
   if(newval.equals("BP") && button == false) {
-      // int[][] current = append(current, (sqX, sqY)); // current square hovering over
-       print(current[0]);
-       print(",");
-       println(current[1]);
+    print("here");
+ 
        print("x: ");
        print(sqX);
        print("y: ");
        println(sqY);
        
-      coords.add(new Coordinates(sqX, sqY));
-      //track++;
+       fill(235, 64, 52);
+       coords.add(new Coordinates(sqX, sqY));
       
-        for (int i = 0; i < coords.size(); i++) {
-          Coordinates coord = coords.get(i);
-          print("xcoords");
-          print(coord.x);
-          print(" ");
-          print("ycoords");
-          print(coord.y);
-          print("\n");
-        }
-  
-      //for (int i = 0; i < track; i++) {
-      //  print("xcoords");
-      //  print(coords[i].x);
-      //  print(" ");
-      //  print("ycoords");
-      //  print(coords[i].y);
-      //  print("\n");
+      for (int i = 0; i < coords.size(); i++) {
+        Coordinates coord = coords.get(i);
+        print("xcoords");
+        print(coord.x);
+        print(" ");
+        print("ycoords");
+        print(coord.y);
+        print("\n");
+      }
+      
+      //for(int i = 0; i < sqX; i++) {
+      //  for(int j = 0; j < sqY; j++) {
+      //   if(i == sqX && j == sqY) {
+      //       fill(235, 64, 52);
+      //    } else {
+      //      fill(255);
+      //    }
+      //  }
       //}
   }
   button = true;
@@ -250,4 +248,13 @@ void readData(){
       i++;
     }
  //   println(newval);
+}
+
+void writeData() {
+  if (mousePressed == true) {                           
+       //if we clicked in the window
+        newESP32.write('1');        
+        //send a 1
+        //println("1");
+      } 
 }
