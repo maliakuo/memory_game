@@ -11,7 +11,8 @@
 import processing.serial.*;
 
 // Size of each cell in the grid, ratio of window size to video size
-
+// 80 * 8 = 640
+// 60 * 8 = 480
 int videoScale = height;
 
 // Number of columns and rows in our system
@@ -19,8 +20,6 @@ int cols, rows;
 int[] current = new int[2];
 int sqX = 1;
 int sqY = 2;
-int i = 0; // for keeping track of button movements
-
 
 Serial myPort;  // Create object from Serial class
 Serial newESP32;
@@ -32,16 +31,18 @@ int input1;
 
 String[] vals = new String[1]; // for joystick input
 
-boolean moveRight = false;
-boolean moveLeft = false;
-boolean moveUp = false;
-boolean moveDown = false;
+String[] inputs = {"BP", "L", "R", "U", "D"};
 
-boolean button = false;
 
 // initializing coordinate array
 Coordinates[] coords;
 int track = 0;
+
+boolean button = false;
+boolean moveRight = false;
+boolean moveLeft = false;
+boolean moveUp = false;
+boolean moveDown = false;
 
 void setup() {
   // print(Serial.list());
@@ -55,7 +56,6 @@ void setup() {
   cols = 4;
   rows = 4;
   surface.setResizable(true);
-  
   coords = new Coordinates[30];
 
 }
@@ -79,10 +79,19 @@ void draw() {
        movePlayer(i, j, sqX, sqY);
      }
      
-
+      
+     
      joystick(i, j);
-     readButton();
+     logSquare();
+     
+     
+    // moveRight = false;
+    // moveLeft = false;
+     //print("sqX:");
+     //println(sqX);
+     //print("sqY:");
 
+     //println(sqY);
 
       stroke(0);
       // For every column and row, a rectangle is drawn at an (x,y) location scaled and sized by videoScale.
@@ -93,7 +102,6 @@ void draw() {
   
 }
 
-// function to alternatively play game with keyboard
 void keyPressed() {
   if(keyCode == DOWN){
     sqY++; 
@@ -121,45 +129,103 @@ void keyPressed() {
   }
 }
 
-// move through grid with joystick
 void joystick(int i, int j) {
   if(newval != null) {
-   
-   
-    //print("newval: ");
-    //println(newval);
+    
+   //if(newval.equals(vals[0]) == true){
+   ////   println("true");
+   // }
+   // else {
+   //  //println("false"); 
+   // }
+    //rintln(newval);
 
+   
+    print("newval: ");
+    println(newval);
+   // print(" vals[0]: ");
+  //  println(vals[0]);
   if(newval.equals("U") && moveUp == false){
     sqY--; 
+    //print("case1: ");
+    //println(newval);
     if(sqY == 0) {
       sqY = 4;
     }
     moveUp = true;
+ //  movePlayer(i, j, sqX, sqY);
    } else if(newval.equals("R") && moveRight == false){
    //  if(hasBeenPressed){
      sqX++; 
+   // print("case2: ");
+    //println(newval);
     if(sqX == 5) {
       sqX = 1;
     }
     moveRight = true;
    }
+    
+  // println(sqX);
+//   movePlayer(i, j, sqX, sqY);
    else if(newval.equals("D") && moveDown == false){
     sqY++; 
+   // print("case3: ");
+   // println(newval);
     if(sqY == 5) {
       sqY = 1;
     } 
     moveDown = true;
   } else if(newval.equals("L") && moveLeft == false){
     sqX--; 
+  //  print("case4: ");
+  //  println(newval);
     if(sqX == 0) {
       sqX = 4;
     }
+ //  movePlayer(i, j, sqX, sqY);
     moveLeft = true;
   }
-  movePlayer(i, j, sqX, sqY);
+     movePlayer(i, j, sqX, sqY);
+  //println(sqX);
+  //println(sqY);
+  
+  }
 
- }
+}
 
+void logSquare() {
+  
+  if(newval != null) {
+    
+    if(newval.equals("BP") && button == false) {
+      // int[][] current = append(current, (sqX, sqY)); // current square hovering over
+       print(current[0]);
+       print(",");
+       println(current[1]);
+       print("x: ");
+       print(sqX);
+       print("y: ");
+       println(sqY);
+  }
+  button = true;
+
+  }
+    //if (newval.equals("BP") && button == false)  {
+    //  coords[track] = new Coordinates(sqX, sqY);
+    //  track++;
+  
+    //  for (int i = 0; i < track; i++) {
+    //    print("xcoords");
+    //    print(coords[i].x);
+    //    print(" ");
+    //    print("ycoords");
+    //    print(coords[i].y);
+    //    print("\n");
+    //  }
+    //} 
+    //button = true;
+  //}
+  
 }
 
 void movePlayer(int x, int y, int sqX, int sqY){
@@ -169,6 +235,7 @@ void movePlayer(int x, int y, int sqX, int sqY){
   //    if(keyCode == DOWN) {
          if(i == x && j == y) {
              fill(80, 180, 200);
+         //int[] current = {x, y}; // current square hovering over
    //    }
         }
       else {
@@ -179,46 +246,16 @@ void movePlayer(int x, int y, int sqX, int sqY){
   }
 }
 }
-
-void readButton() {
-  if(newval != null) {
-    
-
-  if(newval.equals("BP") && button == false) {
-      // int[][] current = append(current, (sqX, sqY)); // current square hovering over
-       print(current[0]);
-       print(",");
-       println(current[1]);
-       print("x: ");
-       print(sqX);
-       print("y: ");
-       println(sqY);
-       
-      coords[track] = new Coordinates(sqX, sqY);
-      track++;
-  
-      for (int i = 0; i < track; i++) {
-        print("xcoords");
-        print(coords[i].x);
-        print(" ");
-        print("ycoords");
-        print(coords[i].y);
-        print("\n");
-      }
-  }
-  button = true;
-
-  }
-  
-}
-
+int i = 0;
 void readData(){
-
-    if ( newESP32.available() > 0) {  
-      // If data is available,
+    if ( newESP32.available() > 0) 
+  {  // If data is available,
+//
     newval = newESP32.readString(); 
 
-   // resetting booleans for joystick()
+   // resetting booleans
+    //if(i < 20) {
+    //  vals[i] = newval;
     vals = append(vals, newval);
     if(i > 0) {
       if(!(newval.equals(vals[i - 1])) && newval.equals("R")) {
@@ -238,6 +275,14 @@ void readData(){
       }
     }
       i++;
+    //}
+    //println(newval);    //print(vals);
+
+   // println(vals[1]);
     }
- //   println(newval);
+
+    
+
+  
+  
 }
