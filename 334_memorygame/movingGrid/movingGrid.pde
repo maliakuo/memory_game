@@ -11,8 +11,7 @@
 import processing.serial.*;
 
 // Size of each cell in the grid, ratio of window size to video size
-// 80 * 8 = 640
-// 60 * 8 = 480
+
 int videoScale = height;
 
 // Number of columns and rows in our system
@@ -20,6 +19,8 @@ int cols, rows;
 int[] current = new int[2];
 int sqX = 1;
 int sqY = 2;
+int i = 0; // for keeping track of button movements
+
 
 Serial myPort;  // Create object from Serial class
 Serial newESP32;
@@ -35,6 +36,8 @@ boolean moveRight = false;
 boolean moveLeft = false;
 boolean moveUp = false;
 boolean moveDown = false;
+
+boolean button = false;
 
 void setup() {
   // print(Serial.list());
@@ -72,13 +75,7 @@ void draw() {
      
 
      joystick(i, j);
-    // moveRight = false;
-    // moveLeft = false;
-     print("sqX:");
-     println(sqX);
-     print("sqY:");
 
-     println(sqY);
 
       stroke(0);
       // For every column and row, a rectangle is drawn at an (x,y) location scaled and sized by videoScale.
@@ -89,6 +86,7 @@ void draw() {
   
 }
 
+// function to alternatively play game with keyboard
 void keyPressed() {
   if(keyCode == DOWN){
     sqY++; 
@@ -116,67 +114,45 @@ void keyPressed() {
   }
 }
 
+// move through grid with joystick
 void joystick(int i, int j) {
   if(newval != null) {
     
-   //if(newval.equals(vals[0]) == true){
-   ////   println("true");
-   // }
-   // else {
-   //  //println("false"); 
-   // }
-    //rintln(newval);
 
    
     print("newval: ");
     println(newval);
-   // print(" vals[0]: ");
-  //  println(vals[0]);
+
   if(newval.equals("U") && moveUp == false){
     sqY--; 
-    //print("case1: ");
-    //println(newval);
     if(sqY == 0) {
       sqY = 4;
     }
     moveUp = true;
- //  movePlayer(i, j, sqX, sqY);
    } else if(newval.equals("R") && moveRight == false){
    //  if(hasBeenPressed){
      sqX++; 
-   // print("case2: ");
-    //println(newval);
     if(sqX == 5) {
       sqX = 1;
     }
     moveRight = true;
    }
-    
-  // println(sqX);
-//   movePlayer(i, j, sqX, sqY);
    else if(newval.equals("D") && moveDown == false){
     sqY++; 
-   // print("case3: ");
-   // println(newval);
     if(sqY == 5) {
       sqY = 1;
     } 
     moveDown = true;
   } else if(newval.equals("L") && moveLeft == false){
     sqX--; 
-  //  print("case4: ");
-  //  println(newval);
     if(sqX == 0) {
       sqX = 4;
     }
- //  movePlayer(i, j, sqX, sqY);
     moveLeft = true;
   }
-     movePlayer(i, j, sqX, sqY);
-  //println(sqX);
-  //println(sqY);
-  
-  }
+  movePlayer(i, j, sqX, sqY);
+
+ }
 
 }
 
@@ -198,16 +174,21 @@ void movePlayer(int x, int y, int sqX, int sqY){
   }
 }
 }
-int i = 0;
+
+void readButton(int i, int j) {
+  if(newval.equals("BP")) {
+    
+  }
+  
+}
+
 void readData(){
-    if ( newESP32.available() > 0) 
-  {  // If data is available,
-//
+
+    if ( newESP32.available() > 0) {  
+      // If data is available,
     newval = newESP32.readString(); 
 
-   // resetting booleans
-    //if(i < 20) {
-    //  vals[i] = newval;
+   // resetting booleans for joystick()
     vals = append(vals, newval);
     if(i > 0) {
       if(!(newval.equals(vals[i - 1])) && newval.equals("R")) {
@@ -224,14 +205,6 @@ void readData(){
       }
     }
       i++;
-    //}
-    //println(newval);    //print(vals);
-
-   // println(vals[1]);
     }
-
-    
-
-  
-  
+ //   println(newval);
 }
