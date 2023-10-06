@@ -20,13 +20,17 @@
 int led_state = LOW;    // the current state of LED
 int button_state;       // the current state of button
 int last_button_state;  // the previous state of button
-
+  
+char last = 'X';
+char current = 'Y';
 
 ezButton button(SW_PIN);
 
 int valueX = 0; // to store the X-axis value
 int valueY = 0; // to store the Y-axis value
 int bValue = 0; // To store value of the button
+
+
 
 void setup() {
   Serial.begin(9600) ;
@@ -39,6 +43,7 @@ void setup() {
 
 void loop() {
   button.loop(); // MUST call the loop() function first
+
 
   // read X and Y analog values
   valueX = analogRead(VRX_PIN);
@@ -58,15 +63,39 @@ void loop() {
   }
 
   // print data to Serial Monitor on Arduino IDE
-  Serial.print("x = ");
-  Serial.print(valueX);
-  Serial.print(", y = ");
-  Serial.print(valueY);
-  Serial.print(" : button = ");
-  Serial.println(bValue);
+  //Serial.print(valueX);
+  if(valueX == 0) {
+    current = 'L';
+    if(current != last) {
+      Serial.print("L");
+      last = 'L';
+    }
+  }
+if(valueX == 4095) {
+  current = 'R';
+  if(current != last)
+   Serial.print("R");
+   last = 'R';
+  }
+if(valueY == 4095) {
+  current = 'D';
+  if(current != last)
+   Serial.print("D");
+   last = 'D';
+  }
+  if(valueY == 0) {
+  current = 'U';
+  if(current != last)
+   Serial.print("U");
+   last = 'U';
+  }
+  
 
-  last_button_state = button_state;      // save the last state
-  button_state = digitalRead(BUTTON_PIN); // read new state
+//  Serial.print(" : button = ");
+//  Serial.println(bValue);
+
+//   last_button_state = button_state;      // save the last state
+//   button_state = digitalRead(BUTTON_PIN); // read new state
 
   if (last_button_state == HIGH && button_state == LOW) {
     Serial.println("BUTTON PRESSED");
