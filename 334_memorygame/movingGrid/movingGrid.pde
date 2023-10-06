@@ -40,7 +40,7 @@ boolean moveDown = false;
 boolean button = false;
 
 // initializing coordinate array
-Coordinates[] coords;
+ArrayList <Coordinates> coords = new ArrayList<Coordinates>();;
 int track = 0;
 
 void setup() {
@@ -56,7 +56,7 @@ void setup() {
   rows = 4;
   surface.setResizable(true);
   
-  coords = new Coordinates[30];
+  //coords = new Coordinates[30];
 
 }
 
@@ -194,17 +194,27 @@ void readButton() {
        print("y: ");
        println(sqY);
        
-      coords[track] = new Coordinates(sqX, sqY);
-      track++;
+      coords.add(new Coordinates(sqX, sqY));
+      //track++;
+      
+        for (int i = 0; i < coords.size(); i++) {
+          Coordinates coord = coords.get(i);
+          print("xcoords");
+          print(coord.x);
+          print(" ");
+          print("ycoords");
+          print(coord.y);
+          print("\n");
+        }
   
-      for (int i = 0; i < track; i++) {
-        print("xcoords");
-        print(coords[i].x);
-        print(" ");
-        print("ycoords");
-        print(coords[i].y);
-        print("\n");
-      }
+      //for (int i = 0; i < track; i++) {
+      //  print("xcoords");
+      //  print(coords[i].x);
+      //  print(" ");
+      //  print("ycoords");
+      //  print(coords[i].y);
+      //  print("\n");
+      //}
   }
   button = true;
 
