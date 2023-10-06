@@ -75,6 +75,7 @@ void draw() {
      
 
      joystick(i, j);
+     readButton();
 
 
       stroke(0);
@@ -117,11 +118,10 @@ void keyPressed() {
 // move through grid with joystick
 void joystick(int i, int j) {
   if(newval != null) {
-    
-
    
-    print("newval: ");
-    println(newval);
+   
+    //print("newval: ");
+    //println(newval);
 
   if(newval.equals("U") && moveUp == false){
     sqY--; 
@@ -163,7 +163,6 @@ void movePlayer(int x, int y, int sqX, int sqY){
   //    if(keyCode == DOWN) {
          if(i == x && j == y) {
              fill(80, 180, 200);
-         int[] current = {x, y}; // current square hovering over
    //    }
         }
       else {
@@ -175,9 +174,22 @@ void movePlayer(int x, int y, int sqX, int sqY){
 }
 }
 
-void readButton(int i, int j) {
-  if(newval.equals("BP")) {
+void readButton() {
+  if(newval != null) {
     
+
+  if(newval.equals("BP") && button == false) {
+      // int[][] current = append(current, (sqX, sqY)); // current square hovering over
+       print(current[0]);
+       print(",");
+       println(current[1]);
+       print("x: ");
+       print(sqX);
+       print("y: ");
+       println(sqY);
+  }
+  button = true;
+
   }
   
 }
@@ -202,6 +214,9 @@ void readData(){
       }
       if(!(newval.equals(vals[i - 1])) && newval.equals("D")) {
         moveDown = false;
+      }
+      if(!(newval.equals(vals[i - 1])) && newval.equals("BP")) {
+        button = false;
       }
     }
       i++;
