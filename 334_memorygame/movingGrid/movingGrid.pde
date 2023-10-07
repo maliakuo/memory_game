@@ -1,14 +1,11 @@
-/* need to
-
-
-
-
-
-
-*/
 
 // Example 16-6: Drawing a grid of squares
 import processing.serial.*;
+import processing.sound.*;
+
+// sounds initialization
+SoundFile boop;
+
 
 // Size of each cell in the grid, ratio of window size to video size
 
@@ -17,9 +14,9 @@ int videoScale = height;
 // Number of columns and rows in our system
 int cols, rows;
 int[] current = new int[2];
-int sqX = 1;
-int sqY = 2;
-int i = 0; // for keeping track of button movements
+int sqX;
+int sqY;
+int i; // for keeping track of button movements
 
 
 Serial myPort;  // Create object from Serial class
@@ -27,17 +24,25 @@ Serial newESP32;
 String val;     // Data received from the serial port
 String newval;
 String changedVal;
-String left = "0";
+String left;
 int input1;
 
 String[] vals = new String[1]; // for joystick input
 
-boolean moveRight = false;
-boolean moveLeft = false;
-boolean moveUp = false;
-boolean moveDown = false;
+boolean moveRight;
+boolean moveLeft;
+boolean moveUp;
+boolean moveDown;
 
-boolean button = false;
+boolean button;
+
+int buttonPress;
+boolean dead;
+
+
+// booleans for player turns - blue is always player 1 // composer is true if making a pattern
+boolean blueTurn;
+boolean composer;
 
 // initializing coordinate array
 ArrayList <Coordinates> coords = new ArrayList<Coordinates>();;
@@ -45,9 +50,9 @@ ArrayList <Coordinates> coords = new ArrayList<Coordinates>();;
 void setup() {
   // print(Serial.list());
   //  String portName = Serial.list()[5]; //change the 0 to a 1 or 2 etc. to match your port
-  String maggiePort = Serial.list()[3];
+  
  // myPort = new Serial(this, portName, 9600);
-  newESP32 = new Serial(this, maggiePort, 9600);
+  
   
   size(400, 400);
   // 4 x 4 grid
@@ -55,8 +60,39 @@ void setup() {
   rows = 4;
   surface.setResizable(true);
   
-  //coords = new Coordinates[30];
+  boop = new SoundFile(this, "boop.wav");
+  reset();
+  
+  if (blueTurn) {
+     String maggiePort = Serial.list()[3];
+     newESP32 = new Serial(this, maggiePort, 9600);
+  }
+}
 
+void reset() {
+  // Number of columns and rows in our system
+  print("here");
+  
+  sqX = 1;
+  sqY = 2;
+  i = 0; // for keeping track of button movements
+  
+  left = "0";
+  
+  moveRight = false;
+  moveLeft = false;
+  moveUp = false;
+  moveDown = false;
+  
+  button = false;
+  
+  buttonPress = 0;
+  dead = false;
+  
+  
+  // booleans for player turns - blue is always player 1 // composer is true if making a pattern
+  blueTurn = true;
+  composer = true;
 }
 
 void draw() {
@@ -79,8 +115,16 @@ void draw() {
      }
      
      joystick(i, j);
-     readButton();
-
+     if (composer) {
+       readButton();
+       if (dead) {
+         endSequence();
+       }
+     }
+     //} else {
+     //  comparePattern();
+     //}
+     
 
       stroke(0);
       // For every column and row, a rectangle is drawn at an (x,y) location scaled and sized by videoScale.
@@ -161,37 +205,60 @@ void joystick(int i, int j) {
 
 }
 
-void movePlayer(int x, int y, int sqX, int sqY){
-
+void movePlayer(int x, int y, int sqX, int sqY){ 
     for(int i = 0; i < sqX; i++) {
       for(int j = 0; j < sqY; j++) {
-  //    if(keyCode == DOWN) {
-         if(i == x && j == y) {
-             fill(80, 180, 200);
-   //    }
-        }
-      else {
-      fill(255);
+          if (i == x && j == y) {
+             fill(80, 180, 200);   
+         } else {
+             fill(255);
+         }
       }
-    
-   // println(sqY);
-  }
-}
+    }
 }
 
+void comparePattern(ArrayList <Coordinates> coords) {
+  if(newval != null) {
+    if(newval.equals("BP") && button == false) {
+      print("x: ");
+      print(sqX);
+      print("y: ");
+      println(sqY);
+       
+      Coordinates prevSel = coords.get(buttonPress);
+      int prevX = prevSel.x;
+      int prevY = prevSel.y;
+      
+      if (prevX != sqX || prevY != sqY) {
+        dead = true;
+      }
+      
+            
+      //int size = coords.size();
+  
+      //Coordinates coord = coords.get(size - 1);
+      //int selX = coord.x;
+      //int selY = coord.y;
+      
+      //movePlayer(selX, selY, sqX, sqY, true);
+
+    
+      }
+      button = true;
+    }
+  } 
 void readButton() {
   if(newval != null) {
     
 
   if(newval.equals("BP") && button == false) {
-    print("here");
+      buttonPress++;
  
        print("x: ");
        print(sqX);
        print("y: ");
        println(sqY);
        
-       fill(235, 64, 52);
        coords.add(new Coordinates(sqX, sqY));
       
       for (int i = 0; i < coords.size(); i++) {
@@ -204,6 +271,23 @@ void readButton() {
         print("\n");
       }
       
+      boop.play();
+      //dead = true;
+      
+      //int size = coords.size();
+  
+      //Coordinates coord = coords.get(size - 1);
+      //int selX = coord.x;
+      //int selY = coord.y;
+      
+      //movePlayer(selX, selY, sqX, sqY, true);
+
+    
+      }
+      button = true;
+    }
+  } 
+      
       //for(int i = 0; i < sqX; i++) {
       //  for(int j = 0; j < sqY; j++) {
       //   if(i == sqX && j == sqY) {
@@ -213,12 +297,12 @@ void readButton() {
       //    }
       //  }
       //}
-  }
-  button = true;
-
-  }
   
-}
+//  button = true;
+
+//  }
+  
+//}
 
 void readData(){
 
@@ -251,10 +335,23 @@ void readData(){
 }
 
 void writeData() {
-  if (mousePressed == true) {                           
-       //if we clicked in the window
-        newESP32.write('1');        
-        //send a 1
-        //println("1");
-      } 
+  //if (mousePressed == true) {                           
+  //     //if we clicked in the window
+  //      newESP32.write('1');        
+  //      //send a 1
+  //      //println("1");
+  //    } 
+}
+
+void endSequence() {
+  String level = "level: " + buttonPress;
+  
+  background(25);
+  textSize(25);
+  text("game over", 40, 40);
+  text(level, 40, 140);
+  text("better luck next time", 40, 240);
+ 
+  
+  
 }
