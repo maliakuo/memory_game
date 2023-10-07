@@ -397,6 +397,7 @@ void endSequence() {
 
   background(25);
   textSize(25);
+  fill(255);
   text("game over", 40, 40);
   text(level, 40, 140);
   text("better luck next time", 40, 240);
