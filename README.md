@@ -10,6 +10,8 @@ the game starts with player1(composer) hitting one square, then player2(student)
 Player2 then becomes the composer and adds an additional square to the pattern.
 then, Player1 becomes the student and repeats that 2 square pattern, and so on, until someone in the student role misremembers.
 
+click here to watch a demo recording: https://youtu.be/ZUUsOlhkIS0
+
 good luck!
 
 ## install instructions
