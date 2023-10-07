@@ -258,6 +258,7 @@ void comparePattern(ArrayList <Coordinates> coords) {
         dead = true;
       } else {
         buttonPress++;
+        boop.play();
       }
       
             
