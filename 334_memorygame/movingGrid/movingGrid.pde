@@ -107,8 +107,12 @@ void draw() {
   Boolean keyInit = false;
   if (blueTurn) {
     newESP32 = player1;
+    player1.write('1');
+
   } else {
     newESP32 = player2;
+    player2.write('1');
+
   }
   
   
@@ -153,7 +157,7 @@ void draw() {
       // For every column and row, a rectangle is drawn at an (x,y) location scaled and sized by videoScale.
       rect(x, y, videoScale, videoScale);
       readData();
-      writeData();
+      //writeData();
     }
   }
 }
