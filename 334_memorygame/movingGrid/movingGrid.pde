@@ -20,6 +20,10 @@ int sqY;
 int i; // for keeping track of button movements
 
 
+int r;
+int g; 
+int b;
+
 Serial player1;  // Create object from Serial class
 Serial player2;
 Serial newESP32;
@@ -59,6 +63,7 @@ void setup() {
   
   size(400, 400);
   // 4 x 4 grid
+  fill(50);
   cols = 4;
   rows = 4;
   surface.setResizable(true);
@@ -110,10 +115,16 @@ void draw() {
   if (blueTurn) {
     newESP32 = player1;
     player1.write('1');
+    r = 66;
+    g = 130;
+    b = 213;
 
   } else {
     newESP32 = player2;
     player2.write('1');
+    r = 210;
+    g = 66;
+    b = 115;
 
   }
   
@@ -142,7 +153,7 @@ void draw() {
 
      if(keyPressed == true) {
        keyInit = true;
-       movePlayer(i, j, sqX, sqY);
+       movePlayer(i, j, sqX, sqY, r, g, b);
      }
      
      joystick(i, j);
@@ -230,19 +241,19 @@ void joystick(int i, int j) {
     }
     moveLeft = true;
   }
-  movePlayer(i, j, sqX, sqY);
+  movePlayer(i, j, sqX, sqY, r, g, b);
 
  }
 
 }
 
-void movePlayer(int x, int y, int sqX, int sqY){ 
+void movePlayer(int x, int y, int sqX, int sqY, int r, int g, int b){ 
     for(int i = 0; i < sqX; i++) {
       for(int j = 0; j < sqY; j++) {
           if (i == x && j == y) {
-             fill(80, 180, 200);   
+             fill(r, g, b);   
          } else {
-             fill(255);
+             fill(50);
          }
       }
     }
