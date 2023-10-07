@@ -5,6 +5,7 @@ import processing.sound.*;
 
 // sounds initialization
 SoundFile boop;
+SoundFile win;
 
 
 // Size of each cell in the grid, ratio of window size to video size
@@ -63,6 +64,7 @@ void setup() {
   surface.setResizable(true);
   
   boop = new SoundFile(this, "boop.wav");
+  win = new SoundFile(this, "win.wav");
   reset();
   String port1 = Serial.list()[4];
   player1 = new Serial(this, port1, 9600);
@@ -121,6 +123,7 @@ void draw() {
       composer = !composer;
       blueTurn =!blueTurn;     
       buttonPress = 0;
+      win.play();
     } else {
       composer = !composer;
       arraySize++;
