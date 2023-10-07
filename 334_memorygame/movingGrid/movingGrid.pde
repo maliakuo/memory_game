@@ -6,6 +6,7 @@ import processing.sound.*;
 // sounds initialization
 SoundFile boop;
 SoundFile win;
+SoundFile lose;
 
 
 // Size of each cell in the grid, ratio of window size to video size
@@ -70,6 +71,7 @@ void setup() {
   
   boop = new SoundFile(this, "boop.wav");
   win = new SoundFile(this, "win.wav");
+  lose = new SoundFile(this, "lose.wav");
   reset();
   String port1 = Serial.list()[4];
   player1 = new Serial(this, port1, 9600);
@@ -273,6 +275,7 @@ void comparePattern(ArrayList <Coordinates> coords) {
       int prevY = prevSel.y;
       
       if (prevX != sqX || prevY != sqY) {
+        lose.play();
         dead = true;
       } else {
         buttonPress++;
