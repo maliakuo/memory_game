@@ -393,7 +393,7 @@ void writeData() {
 }
 
 void endSequence() {
-  String level = "level: " + buttonPress;
+  String level = "level: " + arraySize;
 
   background(25);
   textSize(25);
