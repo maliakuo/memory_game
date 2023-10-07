@@ -1,4 +1,4 @@
-# memory_game
+# memory mania
 Task2 for CPSC334: interactive memory game for two players, using 2 esp32 controllers and processing
 
 ## how does it work?
